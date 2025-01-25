@@ -11,10 +11,14 @@ import useYear from './utils/useYear'
 const Bold = styled.span<{ $bold: boolean }>`
 	${({ $bold }) => ($bold ? 'font-weight: bold;' : '')}
 `
+const getYearsSince = (startYear: number, currentYear: number): number[] => {
+  return Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
+};
 
 export const SelectSimulationYear = () => {
 	const dispatch = useDispatch()
-	const choices = [2023, 2024]
+	const currentYear = new Date().getFullYear(); 
+	const choices = getYearsSince(2023,currentYear);
 
 	const actualYear = useYear()
 
@@ -24,7 +28,7 @@ export const SelectSimulationYear = () => {
 		<Banner hideAfterFirstStep={false} icon={'📅'}>
 			<Trans i18nKey="pages.simulateurs.select-year.info">
 				Cette simulation concerne l'année{' '}
-				<Bold $bold={actualYear !== 2024}>{{ actualYear }}</Bold>.{' '}
+				<Bold $bold={actualYear !== currentYear}>{{ actualYear }}</Bold>.{' '}
 			</Trans>
 			<>
 				{choices
@@ -36,7 +40,7 @@ export const SelectSimulationYear = () => {
 									dispatch(enregistreLaRéponse('date', `01/01/${year}`))
 								}
 							>
-								{actualYear === 2024 ? (
+								{actualYear === currentYear ? (
 									<Trans i18nKey="pages.simulateurs.select-year.access">
 										Accéder au simulateur {{ year }}
 									</Trans>
